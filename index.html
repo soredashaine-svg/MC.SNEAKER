@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mc.sneaker | Sneakers Ordering System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ============ NAVBAR ============ -->
+  <header class="navbar">
+    <a href="#shop" class="logo" data-page="shop">mc<span>.</span>sneaker</a>
+    <nav>
+      <button class="nav-link active" data-page="shop">Shop</button>
+      <button class="nav-link" data-page="orders">My Orders</button>
+      <button class="cart-button" id="openCart" aria-label="Open cart">
+        Cart <span id="cartCount" class="badge">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- ============ SHOP PAGE ============ -->
+  <main id="shopPage" class="page">
+    <section class="hero">
+      <h1>Step up your game.</h1>
+      <p>Original-style sneakers, delivered anywhere in Metro Manila.</p>
+    </section>
+
+    <div class="shop-tools">
+      <input id="searchInput" type="search" placeholder="Search sneakers..." aria-label="Search sneakers">
+      <select id="brandFilter" aria-label="Filter by brand">
+        <option value="all">All brands</option>
+      </select>
+      <select id="sortSelect" aria-label="Sort products">
+        <option value="default">Sort: Featured</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="name">Name: A to Z</option>
+      </select>
+    </div>
+
+    <div id="productGrid" class="product-grid"></div>
+    <p id="noProducts" class="empty" hidden>No sneakers match your search.</p>
+  </main>
+
+  <!-- ============ MY ORDERS PAGE ============ -->
+  <main id="ordersPage" class="page" hidden>
+    <h1>My Orders</h1>
+    <div id="orderList"></div>
+    <p id="noOrders" class="empty">You have no orders yet.</p>
+  </main>
+
+  <!-- ============ PRODUCT DETAILS (pop-up) ============ -->
+  <div id="productModal" class="overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalName">
+      <button class="close" data-close aria-label="Close">&times;</button>
+      <div class="modal-body">
+        <div id="modalImage" class="modal-image"></div>
+        <div>
+          <p id="modalBrand" class="brand"></p>
+          <h2 id="modalName"></h2>
+          <p id="modalPrice" class="price"></p>
+          <p id="modalDescription" class="muted"></p>
+
+          <p class="label">Size (US)</p>
+          <div id="sizeOptions" class="sizes"></div>
+
+          <p class="label">Quantity</p>
+          <div class="qty">
+            <button id="qtyMinus" aria-label="Decrease quantity">−</button>
+            <span id="qtyValue">1</span>
+            <button id="qtyPlus" aria-label="Increase quantity">+</button>
+          </div>
+
+          <p id="modalError" class="error" role="alert"></p>
+          <button id="addToCart" class="primary full">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CART (side panel) ============ -->
+  <div id="cartPanel" class="overlay" hidden>
+    <aside class="drawer" aria-label="Shopping cart">
+      <div class="drawer-head">
+        <h2>Your Cart</h2>
+        <button class="close" data-close aria-label="Close">&times;</button>
+      </div>
+      <div id="cartItems" class="cart-items"></div>
+      <p id="emptyCart" class="empty">Your cart is empty.</p>
+      <div class="drawer-foot">
+        <div class="row"><span>Subtotal</span><span id="cartSubtotal">₱0.00</span></div>
+        <button id="goCheckout" class="primary full">Checkout</button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ============ CHECKOUT (pop-up) ============ -->
+  <div id="checkoutModal" class="overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+      <button class="close" data-close aria-label="Close">&times;</button>
+      <h2 id="checkoutTitle">Delivery Details</h2>
+      <form id="checkoutForm" novalidate>
+        <label>Full name
+          <input name="name" type="text" required maxlength="60">
+        </label>
+        <label>Contact number
+          <input name="phone" type="tel" placeholder="09XXXXXXXXX" required>
+        </label>
+        <label>Address
+          <input name="address" type="text" required maxlength="120">
+        </label>
+        <label>City
+          <select name="city" required>
+            <option value="">Select a city</option>
+          </select>
+        </label>
+        <label>Payment method
+          <select name="payment" required>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+            <option value="GCash">GCash</option>
+          </select>
+        </label>
+        <label>Notes (optional)
+          <input name="notes" type="text" maxlength="120">
+        </label>
+
+        <div class="summary">
+          <div class="row"><span>Subtotal</span><span id="sumSubtotal"></span></div>
+          <div class="row"><span>Shipping fee</span><span id="sumShipping"></span></div>
+          <div class="row total"><span>Total</span><span id="sumTotal"></span></div>
+        </div>
+
+        <p id="checkoutError" class="error" role="alert"></p>
+        <button type="submit" class="primary full">Place Order</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ ORDER CONFIRMED (pop-up) ============ -->
+  <div id="successModal" class="overlay" hidden>
+    <div class="modal small" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+      <h2 id="successTitle">Order placed! 🎉</h2>
+      <p>Thank you for shopping at mc.sneaker.</p>
+      <p>Your order number is <strong id="successNumber"></strong>.</p>
+      <button id="viewOrders" class="primary full">View My Orders</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    mc.sneaker · A school project by Marc Jayr Bermudez · Demo only, no real payments
+  </footer>
+
+  <script src="products.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
